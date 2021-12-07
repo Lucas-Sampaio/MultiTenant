@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MultiTenant.Api.Middlewares;
+using MultiTenant.Api.Provider;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +34,8 @@ namespace MultiTenant.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Multitenat.Api", Version = "v1" });
             });
+
+            services.AddScoped<TenantData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +49,8 @@ namespace MultiTenant.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<TenantMiddleware>();
 
             app.UseRouting();
 

@@ -1,13 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MultiTenant.Api.Domain;
+using MultiTenant.Api.Provider;
 
 namespace MultiTenant.Api.Data
 {
     public class ApplicationContext : DbContext
     {
+        private TenantData _tenantData { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Product> Products { get; set; }
 
+        public ApplicationContext(DbContextOptions<ApplicationContext> options, TenantData tenant) : base(options)
+        {
+            _tenantData = tenant;
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.HasDefaultSchema(TenantData.TenantId);
@@ -22,8 +28,8 @@ namespace MultiTenant.Api.Data
                 new Product { Id = 2, Description = "Description 2", TenantId = "tenant-2" },
                 new Product { Id = 3, Description = "Description 3", TenantId = "tenant-2" });
 
-            //modelBuilder.Entity<Person>().HasQueryFilter(p=>p.TenantId == TenantData.TenantId);
-            //modelBuilder.Entity<Product>().HasQueryFilter(p=>p.TenantId == TenantData.TenantId);
+            modelBuilder.Entity<Person>().HasQueryFilter(p => p.TenantId == _tenantData.);
+            modelBuilder.Entity<Product>().HasQueryFilter(p => p.TenantId == TenantData.TenantId);
         }
     }
 }
