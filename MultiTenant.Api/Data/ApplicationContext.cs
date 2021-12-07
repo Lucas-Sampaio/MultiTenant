@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Multitenant.Api.Domain;
+using MultiTenant.Api.Domain;
 
-namespace Multitenant.Api.Data
+namespace MultiTenant.Api.Data
 {
     public class ApplicationContext : DbContext
     {

@@ -1,4 +1,4 @@
-﻿namespace Multitenant.Api.Domain
+﻿namespace MultiTenant.Api.Domain
 {
     public abstract class BaseEntity
     {
