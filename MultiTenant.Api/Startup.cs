@@ -2,11 +2,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MultiTenant.Api.Data;
+using MultiTenant.Api.Provider;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +36,18 @@ namespace MultiTenant.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Multitenat.Api", Version = "v1" });
             });
+            services.AddScoped<TenantData>();
+            services.AddScoped<StrategySchemaInterceptor>();
+            services.AddDbContext<ApplicationContext>((provider, options) =>
+            {
+                options
+                    .UseSqlServer("connectionString")
+                    .ReplaceService<IModelCacheKeyFactory,StrategySchemaModelCacheKey>();
+
+                var interceptor = provider.GetRequiredService<StrategySchemaInterceptor>();
+                options.AddInterceptors(interceptor);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
