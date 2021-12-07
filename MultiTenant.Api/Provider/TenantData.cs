@@ -2,6 +2,6 @@
 {
     public class TenantData
     {
-        public string TenantId { get; set; } = "dbo";
+        public string TenantId { get; set; };
     }
 }
